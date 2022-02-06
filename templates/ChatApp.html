@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    
+    <div class="text-center well"><b>Live Chat</b></div>
+    <p class="text-danger">WARNING, after switching off, the messages will be deleted !!! </p>
+
+
+    <div class="container">
+      <div class="col-sm-8">
+        <div class="no_message">
+          <h1 style='color: #ccc'>No message yet..</h1>
+          <div class="message_holder" style="overflow-y: scroll;
+          max-height: 300px;"></div>
+          
+        </div>
+      </div>
+      <div class="col-sm-4">
+          <hr>
+        <form action="" method="POST">
+          <b>Type your message below <span class="glyphicon glyphicon-arrow-down"></span></b>
+          <div class="clearfix" style="margin-top: 5px;"></div>
+          <!-- <h2 type="text" class="username form-control">{{ username }} </h2> -->
+          <div class="sidebar-heading" id= "my_username"> {{ username }} :  </div>
+          <div style="padding-top: 5px;"></div>
+          <input type="text" class="message form-control" placeholder="Messages">
+          <div style="padding-top: 5px;"></div>
+          <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-send"></span> Send</button>
+        </form>
+
+        <div class="users"></div>
+      </div>
+    </div>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+
+    <script src="https://cdn.socket.io/3.1.1/socket.io.min.js"></script>
+    
+    <script>
+      var socket = io.connect('http://192.168.100.101:8000/',{
+        'reconnection': true,
+        'reconnectionDelay': 1500,  
+        'reconnectionAttempts': 15
+      });
+     
+    
+      // broadcast a message
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected ' + "{{ username }}"
+        })
+          
+           
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          var user_name = "{{ username }}";
+          let user_input = $( 'input.message' ).val()
+          let timestamp = "{{ time_stamp }}"
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input,
+            timestamp : timestamp
+          } )
+          // empty the input field
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+
+      // capture message
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h1' ).remove()
+          $( 'div.message_holder' ).append( '<div class="msg_bbl"><b style="color: #000; font-size:small">'+msg.timestamp+' -</b> <b style="color: #000">' +msg.user_name+' : '+msg.message+'</b ></div>' )
+        }
+      } )
+
+      
+
+     
+    </script>
+            
+
+    {% endblock %}

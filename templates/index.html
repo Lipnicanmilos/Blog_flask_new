@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    
+     <!-- flash sprava    -->
+     {%with messages = get_flashed_messages()%}
+     {%if messages%} 
+     {% for message in messages %}
+     <div class="alert alert-success alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label ="close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+         {{message}}
+     </div>
+     {%endfor%}
+     {%endif%}
+     {%endwith%}
+     <!-- koniec flash sprava -->
+
+     <div class="demo">
+        <div id="large-header" class="large-header">
+          <div class="main_index">
+            <img
+              src="/static/img/icons/vs_code.png"
+              class="small_vs no-border"
+            />
+            <div class="icons js">
+              <img src="/static/img/icons/js.png" class="no-border" />
+            </div>
+    
+            <div class="icons python">
+                <img src="/static/img/icons/python.png" class="no-border" />
+            </div>
+    
+            <div class="icons git">
+                <img src="/static/img/icons/css.png" class="no-border" />
+            </div>
+    
+            <div class="icons java">
+                <img src="/static/img/icons/sqlite.png" class="no-border" />
+            </div>
+    
+            <div class="icons Deno">
+                <img src="/static/img/icons/flask.png" class="no-border" />
+              
+            </div>
+    
+            <div class="icons vue">
+                <img src="/static/img/icons/html.png" class="no-border" />
+            </div>
+          </div>
+        </div>
+
+        <div class="positon_btn">
+          <a href="{{ url_for('register') }}" class="btn btn-secondary btn-lg active positon_btn" role="button" aria-pressed="true">Registration</a>
+          <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Login</a>
+
+        </div>
+
+     
+            
+
+    {% endblock %}

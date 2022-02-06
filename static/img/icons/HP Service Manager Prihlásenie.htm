@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--[if lt IE 9]>
+    <html lang="en" class="ie8">
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en"><!--<![endif]--><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/typography.css">
+  <link rel="stylesheet" type="text/css" href="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/login.css">
+  <noscript>
+    <meta http-equiv="refresh" content="0;url=cwc/nojs.jsp" />
+  </noscript>
+  
+<script type="text/javascript">
+  if (self === top) {
+    var antiClickjacking = document.getElementById("antiClickjacking");
+    antiClickjacking.parentNode.removeChild(antiClickjacking);
+  } else {
+    var topCwc = top.cwc || (window.cwc && window.cwc.getTopCwc());
+    if (topCwc) {
+      topCwc.exitConfirmRequired = false;
+    }
+    top.location = topCwc.toCSRFSafe(self.location.pathname);
+  }
+</script>
+  
+  <meta name="gwt:property" content="locale=en">
+  <title>HP Service Manager: Prihlásenie</title>
+  <link rel="shortcut icon" href="https://servicedesk.skytoll.sk/sm/images/no_branding/HPLogoSolidBlue.ico">
+  <script type="text/javascript" src="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/login-util.js">/**/</script>
+
+  <script type="text/javascript" src="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/login-base.js">/**/</script>
+
+
+</head>
+<body onload="loginFormOnLoad();" class="" cz-shortcut-listen="true">
+    <div class="login-container">
+        <div class="login-content clearfix">
+            <div class="left-container clearfix">
+                <div class="login-board"></div>
+            </div>
+            <div class="right-container clearfix">
+                <div class="login-form-container">
+                    <img src="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/LOGO.png" class="login-logo" alt="">
+                    <div class="login-form">
+                        <form id="Login" name="Login" autocomplete="off" onsubmit="prepareFormData()" method="POST" action="/sm/index.do?lang=en">
+                            <span class="login-title">HP Service Manager</span>
+                            
+                            <div id="WarningMsgWrapperDiv" class="login-warning" style="visibility:visible;">
+                                
+                                Boli ste odhlásený, pretože vypršal časový limit relácie.
+                                
+                            </div>
+                            <div class="form-field">
+                                <div class="placeholder" aria-hidden="true">Meno používateľa</div>
+                                <input id="LoginUsername" type="text" placeholder="" name="user.id" tabindex="1" class="inputtext form-control" aria-label="Meno používateľa" value="mlipnican">
+                            </div>
+                            <div class="form-field">
+                                <div class="placeholder" aria-hidden="true">Heslo</div>
+                                <input id="LoginPassword" placeholder="" type="password" tabindex="2" class="inputpassword form-control" aria-label="Heslo">
+                            </div>
+                            <input type="hidden" name="type" id="type" value="login">
+                            <input type="hidden" id="xHtoken" name="xHtoken">
+                            <input type="hidden" id="old.password" name="old.password">
+                            <input type="hidden" name="event" id="event" value="0">
+                            <input type="hidden" name="L.language" id="LoginLanguage" value="en">
+                            <div style="position:relative;z-index:-1;height:0px;" tabindex="-1" aria-hidden="true"><input aria-hidden="true" tabindex="-1" role="presentation" type="submit" id="loginFormSubmit"></div>
+                        </form>
+                        <div id="languageContainer" class="language-container" style="visibility: hidden;">
+                            <label for="selectedLanguage" style="display:none;">Jazyk</label>
+                            <span id="languageChoice" class="language-choice form-field">
+                                <input id="selectedLanguage" aria-autocomplete="both" type="text" tabindex="3" role="combobox" selectonly="1" class="inputtext form-control" aria-owns="selectedLanguagePopup_div" aria-activedescendant="selectedLanguagePopup_div" aria-haspopup="true" aria-expanded="false" onkeydown="hpsm.widgets.Combo.keyDown(event, 'selectedLanguage');" onkeyup="hpsm.widgets.Combo.keyUp(event, 'selectedLanguage');" onfocus="hpsm.widgets.Combo.handleOnFocus(this, event);" onblur="hpsm.widgets.Combo.handleOnBlur(this, event);" onclick="hpsm.widgets.Combo.togglePopup('selectedLanguage', true);" value="English">
+                                <div><b></b></div>
+                            </span>
+                            <div id="selectedLanguagePopup_div" needrender="true" class="language-drop" style="display: none;"><div id="selectedLanguagePopup" class="language-results" role="listbox" tabindex="4"></div></div>
+                        </div>
+                    </div>
+                    <div class="login-form-button">
+                      <input type="submit" id="loginBtn" class="x-btn-text cwc-btn-text" value="Prihlásiť">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="login-footer" style="height: 201px; margin-top: -201px;">
+        <div id="licensingLogos" class="loginLogos">
+            
+        </div>
+        <div class="login-copyright">© 1994-2016 Hewlett-Packard Development Company, L.P. Všetky práva vyhradené.<br> Tento software je chránený medzinárodnými zákonmi o autorskom práve.</div>
+    </div>
+
+  <div id="preloader" style="display:none;"><iframe src="HP%20Service%20Manager%20Prihl%C3%A1senie_subory/loginPreload.htm" title="Prázdne"></iframe></div>
+
+  <script type="text/javascript">
+    hpsm.widgets.Combo.generatePopupOptionsData("selectedLanguage", [{v:"en",d:"English"}]);
+
+    
+    document.getElementById("preloader").innerHTML = '<iframe src="loginPreload.jsp" title ="Prázdne" ></iframe>';
+
+    window.onresize = resize;
+    registerEvent();
+
+    if (isHighContrastMode()) {
+      document.body.className = document.body.className + ' hc-mode';
+    }
+  </script>
+
+
+</body></html>

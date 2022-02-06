@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<!-- flash sprava    -->
+{%with messages = get_flashed_messages()%}
+{%if messages%}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissable" role="alert" value="Na prístup sa prihláste">
+   <button type="button" class="close" data-dismiss="alert" aria-label="close">
+      <span aria-hidden="true">&times;</span>
+   </button>
+   {{message}}
+</div>
+{%endfor%}
+{%endif%}
+{%endwith%}
+<!-- koniec flash sprava -->
+
+
+
+
+
+<!-- stranka bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container">
+   <div class="row">
+      <div class="col-md-12">
+         <div id="content" class="content content-full-width">
+
+            <div class="button" style="text-align: center;">
+
+               <!-- Button trigger modal -->
+               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add a post
+               </button>
+
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+               aria-hidden="true">
+               <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                        </button>
+                     </div>
+                     <div class="modal-body">
+
+                        <form action="{{ url_for('create_new') }}" method="POST">
+
+
+                           <div class="form-group">
+
+
+                              <label>Title</label>
+                              <input type="hidden" name="id" value="Nadpis">
+
+                              <input type="text" class="form-control" name="title" value="Názov článku">
+
+
+                           </div>
+
+
+
+                           <div class="form-group">
+
+
+                              <label>Content</label>
+
+                              <textarea name="editor1"></textarea>
+                              <script>
+                                 CKEDITOR.replace('editor1', {
+                                    filebrowserImageUploadUrl: '/ckupload/',
+                                    uiColor: '#2d69e0',
+                                    language: 'sk',
+                                    extraPlugins: 'colorbutton,colordialog',
+                                    removeButtons: 'PasteFromWord',
+                                    filebrowserUploadUrl: '/ckupload/', // Route
+                                    filebrowserImageUploadUrl: '/ckupload/', // File location
+                                    filebrowserUploadMethod: "form",
+
+                                 });
+
+
+
+                              </script>
+
+
+
+                           </div>
+
+
+                           <!-- <div class="form-group">
+               
+               
+                                 <label>Jpg:</label>
+               
+                                 <input type="text" class="form-control" name="mobil" value="KKKKKK">
+               
+               
+                              </div>
+     
+                              <div class="form-group">
+               
+               
+                                 <label>Password:</label>
+               
+                                 <input type="text" class="form-control" name="password" value="UUUUU">
+               
+               
+                              </div> -->
+
+
+                           <div class="form-group">
+
+
+                              <!-- <button class="btn btn-primary" type="sbumit">Update</button> -->
+
+
+                           </div>
+
+
+                           <button type="submit" class="btn btn-primary" style="width: 33%; margin-left: 33%;">Save
+                              post</button>
+
+                        </form>
+
+                        {{ ckeditor.load() }}
+                        {{ ckeditor.config(name="editor1" ) }}
+
+
+
+
+                     </div>
+                     <div class="modal-footer">
+
+
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <!-- begin profile-content -->
+            <div class="profile-content">
+               <!-- begin tab-content -->
+               <div class="tab-content p-0">
+                  <!-- begin #profile-post tab -->
+                  <div class="tab-pane fade active show" id="profile-post">
+                     <!-- begin timeline -->
+                     <ul class="timeline">
+
+                        {% for post in posts.items %}
+                        <li>
+                           <!-- begin timeline-time -->
+                           <div class="timeline-time">
+                              <span class="date">Created</span>
+                              <span class="time">{{post.date_posted.strftime('%Y-%m-%d')}}</span>
+                           </div>
+                           <!-- end timeline-time -->
+                           <!-- begin timeline-icon -->
+                           <div class="timeline-icon">
+                              <a href="javascript:;">&nbsp;</a>
+                           </div>
+                           <!-- end timeline-icon -->
+                           <!-- begin timeline-body -->
+                           <div class="timeline-body">
+                              <div class="timeline-header">
+
+                                 <span class="userimage"><img
+                                       src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}"
+                                       alt=""></span>
+
+                                 <span class="username"><a href="javascript:;">{{post.author.username}}</a>
+                                    <small></small></span>
+
+                                 {% if session['id'] == post.user_id or session['email'] ==
+                                 'dominika.babinska@gmail.com' %}
+                                 <span class="pull-right text-muted"> <a href="/delete_post/{{ post.id }}"
+                                       class="btn btn-danger btn-xs"
+                                       onclick="return confirm('Naozaj chceš odstraniť príspevok')">Delete
+                                    </a></span>
+                                 {% endif %}
+                              </div>
+
+
+                              <div class="timeline-content">
+                                 <span class="username">
+                                    <h3>{{post.title}}</h3> <small></small>
+                                 </span>
+                                 <p>
+                                    {{post.content | safe }}
+                                 </p>
+                              </div>
+                              <div class="timeline-likes">
+                                 <div class="stats-right">
+                                    <a href="javascript:;" class="m-r-15 text-inverse-lighter">
+                                    
+                                       {% if current_user.has_liked_post(post) %}
+                                       
+                                       <a href="{{ url_for('like_action', post_id=post.id, action='unlike') }}" style="color:rgb(58, 87, 149)">
+                                          <i class="fa fa-thumbs-o-down fa-fw fa-lg m-r-3" ></i>Unlike</a>
+                                     {% else %}
+                                       <a href="{{ url_for('like_action', post_id=post.id, action='like') }}" style="color:rgb(58, 87, 149)">
+                                          <i class="fa fa-thumbs-o-up fa-fw fa-lg m-r-3" ></i>Like</a>
+                                     {% endif %}
+                                    
+  
+                                    
+                                    
+                                    </a>
+                                 </div>
+                                 <div class="stats" id="hello">
+                                    
+                                    <span class="fa-stack fa-fw stats-icon">
+                                       <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                       <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                    <span class="stats-total" data-toggle="tooltip" data-placement="bottom" title="{{ post.likes.all () }}">
+                                       {{ post.likes.count() }} 
+                                    </span>
+
+                                    {% if post.likes.count () > 0 %}
+                                    <p id="there">THERE
+                                       {% for post in liked %}
+                                       <td>{{ post.user.username }} dfsa</td>
+                                   {% endfor %}
+                                    </p>
+                                    {% endif %}
+
+
+                                 </div>
+                              </div>
+                              <div class="timeline-footer">
+                                 
+ 
+                              </div>
+
+
+                                 <!-- {% for comment in post.comments %}
+                                    {{ comment.content }}
+                                 {% endfor %}
+                                  -->
+
+                                  <p class="card-text">
+                                    {% if post.comments|length > 0 %}
+                                    <a data-toggle="collapse" href="#comments-{{post.id}}" role="button">
+                                       
+                                      <small>View {{ post.comments|length }} Comments</small>
+                                    </a>
+
+                                    {% else %}
+                                    <small class="text-muted">No Comments</small>
+                                    {% endif %}
+                                  </p>
+
+
+                                  <div class="collapse" id="comments-{{post.id}}">
+                                    <div class="card">
+                                      <div class="card-body" id="comments-expanded-{{post.id}}">
+                                        {% for comment in post.comments %}
+                                        <div class="d-flex justify-content-between align-items-center">
+                                          <div>
+                                             {% if comment.user.username == NONE %}
+                                             <b>deleted_user</b>
+                                             {% else %}
+                                             <b style="color:#4d72de"
+                                            
+                                              >{{comment.user.username}}</b
+
+                                            >
+                                            {% endif %}
+                                            
+                                             
+                                            : {{comment.content}}
+                                          </div>
+                                          <div>
+                                            <small class="text-muted"> {{comment.date_created.strftime('%Y-%m-%d, %H:%M:%S' )}}</small>
+                                            {% if user.id == comment.author or user.id == post.user_id %}
+                                            <div class="btn-group">
+                                              <button
+                                                type="button"
+                                                class="btn btn-sm btn-primary dropdown-toggle"
+                                                data-toggle="dropdown"
+                                              ></button>
+                                              <ul class="dropdown-menu">
+                                                <li>
+                                                  <a
+                                                    href="/delete-comment/{{comment.id}}"
+                                                    class="dropdown-item"
+                                                    >Delete</a
+                                                  >
+                                                </li>
+                                              </ul>
+                                            </div>
+                                            {% endif %}
+                                          </div>
+                                        </div>
+                                        {% endfor %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                 
+
+                              <div class="timeline-comment-box">
+                                 <div class="user"><img style="border-radius: 8px"
+                                       src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}">
+                                 </div>
+                                 <div class="input">
+                                    <form method="POST" action="/create-comment/{{post.id}}">
+                                       <div class="input-group">
+                                          <input type="text" id="text" name="text" class="form-control rounded-corner"
+                                             placeholder="Write a comment..." />
+                                          <span class="input-group-btn p-l-10">
+                                             <button class="btn btn-primary f-s-12 rounded-corner"
+                                                type="submit">Comment</button>
+                                          </span>
+                                       </div>
+                                    </form>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- end timeline-body -->
+                        </li>
+
+                        {% endfor %}
+                        <div class="button" style="text-align: center;">
+                           {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1,
+                           right_current=2) %}
+                           {% if page_num %}
+                           {% if posts.page == page_num %}
+                           <a class="btn btn-primary mb-4" href="{{ url_for('index2', page=page_num)}}"> {{ page_num
+                              }}</a>
+
+                           {% else %}
+                           <a class="btn btn-outline-primary mb-4" href="{{ url_for('index2', page=page_num)}}"> {{
+                              page_num }}</a>
+                           {% endif %}
+
+
+                           {% else %}
+                           ...
+
+                           {% endif %}
+                           {% endfor %}
+                        </div>
+                     </ul>
+                     <!-- end timeline -->
+                  </div>
+                  <!-- end #profile-post tab -->
+               </div>
+               <!-- end tab-content -->
+            </div>
+            <!-- end profile-content -->
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<script>
+   $(document).ready(function(){
+     $('[data-toggle="tooltip"]').tooltip();   
+   });
+</script>
+
+
+{% endblock %}
+
