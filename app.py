@@ -1,21 +1,38 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import socketio
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
+from flask_mail import Mail
+from flask_ckeditor import CKEditor
+from flask_socketio import SocketIO
 
+from config import Config
 
-# toto mu hovorí kde ma začať 
 app = Flask(__name__)
+app.config.from_object(Config)
 
-
-app.config['SECRET_KEY'] ='48ew456768gds6regvd564687'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+mail = Mail(app)
+ckeditor = CKEditor(app)
+socketio = SocketIO(app)
+
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
+login_manager.login_message = 'Please log in ...'
+
+# modely musia byť importované pred routes.py aj pred user_loaderom
+from models import User
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-from routes import *
+
+from routes import *  # noqa: E402,F401,F403 - registruje route handlery do 'app'
 
 
-# hosting python https://www.pythonanywhere.com/details/flask_hosting
-# hosting pythonm https://www.youtube.com/watch?v=xTn4DXI8dyc
+if __name__ == "__main__":
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
