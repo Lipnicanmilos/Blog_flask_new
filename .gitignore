@@ -1,0 +1,24 @@
+# Virtuálne prostredie
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Databáza a citlivé súbory
+*.db
+.env
+
+# Editor
+.vscode/
+
+# Nahraté súbory od používateľov (ponechaj default.jpg v git)
+static/profile_pics/*
+!static/profile_pics/default.jpg
+static/upload/*
+
+# Zip/backup súbory
+*.zip
+backup/
